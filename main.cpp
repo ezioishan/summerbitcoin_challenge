@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
-#define ll long long
+
 using namespace std;
+
+const int MAX_WEIGHT = 4 * 1e6;
 
 class Transaction
 {
@@ -59,9 +61,9 @@ void readFromFile(string fileName, vector<Transaction> &records)
         getline(file, parents, '\n');
         if (iteration == 1)
             continue;
-        vector<string> par_vec = tokenize(parents); //semi-colon separated strings
-        int cur_fee = stoi(fee);                    //fee is converted from string to integer
-        int cur_weight = stoi(weight);              //weight is converted from string to integer
+        vector<string> par_vec = tokenize(parents); /*semi-colon separated strings*/
+        int cur_fee = stoi(fee);                    /*fee is converted from string to integer*/
+        int cur_weight = stoi(weight);              /*weight is converted from string to integer*/
         // if (viewCount-- > 0)
         // {
         //     cout << "TXID: " << tx_id << "\n";
@@ -97,25 +99,31 @@ int main()
     readFromFile("mempool.csv", data);
     cout << "\n\n";
 
-    //An unordered set to store parent transactions already added to the block
+    /*
+    An unordered set to store parent transactions already added to the block
+    */
     unordered_set<string> parentsAdded;
 
-    const int MAX_WEIGHT = 4 * 1e6;
-
-    //to keep count of the current weight and fees of the block
+    /*
+    to keep count of the current weight and fees of the block
+    */
     int cur_weight = 0, tot_fees = 0;
 
-    //to store txids in the resultant block
+    /*
+    to store txids in the resultant block
+    */
     vector<string> result;
 
     for (int i = 0; i < data.size(); i++)
     {
-        bool ok = true; //boolean to find if anyone parent transaction already found or not
+        bool ok = true; /*boolean to find if anyone parent transaction already found or not*/
 
         for (int j = 0; i < data[i].parents.size(); j++)
         {
-            //check if parent[j] is already adde to our block, if not then we cannot add this transaction
-            //hence ok = FALSE
+            /*
+            check if parent[j] is already adde to our block, if not then we cannot add this transaction
+            hence ok = FALSE
+            */
             if (parentsAdded.find(data[i].parents[j]) == parentsAdded.end())
             {
                 ok = false;
@@ -123,9 +131,11 @@ int main()
             }
         }
 
-        //Otherwise ok = TRUE which means all parent transactions are already added
-        //so we can check the next step i.e. if current weight of the block + weight of current transaction
-        //is less than MAX_WEIGHT then add it to the block
+        /*
+        Otherwise ok = TRUE which means all parent transactions are already added
+        so we can check the next step i.e. if current weight of the block + weight of current transaction
+        is less than MAX_WEIGHT then add it to the block
+        */
         if (ok && cur_weight + data[i].weight <= MAX_WEIGHT)
         {
             cur_weight += data[i].weight;
