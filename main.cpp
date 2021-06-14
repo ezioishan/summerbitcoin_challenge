@@ -71,6 +71,40 @@ int main()
     vector<Transaction> data;
     readFromFile("mempool.csv", data);
     cout << "\n\n";
+    unordered_set<string> parentsAdded;
 
-        return 0;
+    const int MAX_WEIGHT = 4 * 1e6;
+    int cur_weight = 0, tot_fees = 0;
+
+    vector<string> result;
+
+    for (int i = 0; i < data.size(); i++)
+    {
+        bool ok = true;
+        for (int j = 0; i < data[i].parents.size(); j++)
+        {
+            if (parentsAdded.find(data[i].parents[j]) == parentsAdded.end())
+            {
+                ok = false;
+                break;
+            }
+        }
+        if (ok && cur_weight + data[i].weight <= MAX_WEIGHT)
+        {
+            cur_weight += data[i].weight;
+            tot_fees += data[i].fee;
+
+            result.push_back(data[i].tx_id);
+            parentsAdded.insert(data[i].tx_id);
+        }
+    }
+
+    cout << "TRANSACTIONS ADDED (TX_ID): \n";
+    for (string s : result)
+    {
+        cout << s << "\n";
+    }
+    cout << "TOTAL WEIGHT = " << cur_weight << ", TOTAL FEES = " << tot_fees << "\n";
+    cout << "\n\n";
+    return 0;
 }
