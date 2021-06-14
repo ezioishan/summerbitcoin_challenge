@@ -97,7 +97,7 @@ int main()
     readFromFile("mempool.csv", data);
     cout << "\n\n";
 
-    //to store parent transactions already added to the block
+    //An unordered set to store parent transactions already added to the block
     unordered_set<string> parentsAdded;
 
     const int MAX_WEIGHT = 4 * 1e6;
@@ -136,11 +136,11 @@ int main()
         }
     }
 
-    cout << "TRANSACTIONS ADDED (TX_ID): \n";
-    for (string s : result)
-    {
-        cout << s << "\n";
-    }
+    // cout << "TRANSACTIONS ADDED (TX_ID): \n";
+    // for (string s : result)
+    // {
+    //     cout << s << "\n";
+    // }
     cout << "TOTAL WEIGHT = " << cur_weight << ", TOTAL FEES = " << tot_fees << "\n";
     cout << "\n\n";
     writeToFile("block.txt", result);
