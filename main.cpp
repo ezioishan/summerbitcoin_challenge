@@ -72,6 +72,23 @@ void readFromFile(string fileName, vector<Transaction> &records)
         Transaction temp(tx_id, cur_fee, cur_weight, par_vec);
         records.push_back(temp);
     }
+
+    file.close();
+}
+
+/*
+writeToFile function writes strings one by one from block and stores it into
+the file specified by parameter fileName by creating a file if not already present
+or by modifying it
+*/
+void writeToFile(string fileName, vector<string> block)
+{
+    ofstream file(fileName);
+    for (string txid : block)
+    {
+        file << txid << "\n";
+    }
+    file.close();
 }
 
 int main()
@@ -126,5 +143,6 @@ int main()
     }
     cout << "TOTAL WEIGHT = " << cur_weight << ", TOTAL FEES = " << tot_fees << "\n";
     cout << "\n\n";
+    writeToFile("block.txt", result);
     return 0;
 }
